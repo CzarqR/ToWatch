@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "51169661889",
+    "project_id": "towatch-bf50f",
+    "storage_bucket": "towatch-bf50f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51169661889:android:c0ee77752934a750055540",
+        "android_client_info": {
+          "package_name": "com.myniprojects.towatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51169661889-5mohvpa6v9l8vj5pp8ee40po2l3giu7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyuy7gf9gPGSgXP-iNYtNIKLa_Y6XKe1I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51169661889-5mohvpa6v9l8vj5pp8ee40po2l3giu7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
