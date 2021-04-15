@@ -16,4 +16,7 @@
     <string name="something_went_wrong">Something went wrong. %s</string>
     <string name="wrong_email_or_passwd">Wrong email or password</string>
     <string name="logged_in_correctly">Logged in correctly</string>
+    <string name="search">Search</string>
+    <string name="towatch">ToWatch</string>
+    <string name="watched">Watched</string>
 </resources>
