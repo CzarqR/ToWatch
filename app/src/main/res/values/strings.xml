@@ -9,4 +9,11 @@
     <string name="register">Register</string>
     <string name="have_account">Have account</string>
     <string name="ok">OK</string>
+    <string name="empty_email">Email is empty</string>
+    <string name="too_short_passwd">Password has to be at least %d letters long</string>
+    <string name="diff_passwd">Passwords are not the same</string>
+    <string name="successfully_registered">Successfully registered</string>
+    <string name="something_went_wrong">Something went wrong. %s</string>
+    <string name="wrong_email_or_passwd">Wrong email or password</string>
+    <string name="logged_in_correctly">Logged in correctly</string>
 </resources>
