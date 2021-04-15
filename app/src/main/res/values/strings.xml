@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">ToWatch</string>
+    <string name="application_logo">Application logo</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_account">Create account</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="register">Register</string>
+    <string name="have_account">Have account</string>
+    <string name="ok">OK</string>
 </resources>

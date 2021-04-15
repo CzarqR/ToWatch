@@ -1,4 +1,4 @@
-package com.myniprojects.towatch.ui
+package com.myniprojects.towatch.ui.activities
 
 import android.app.Application
 import com.myniprojects.towatch.BuildConfig
