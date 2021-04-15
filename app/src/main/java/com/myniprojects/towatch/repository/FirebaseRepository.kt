@@ -5,6 +5,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.myniprojects.towatch.R
 import com.myniprojects.towatch.utils.const.PASSWD_MIN_LENGTH
+import com.myniprojects.towatch.utils.ext.makeEvent
 import com.myniprojects.towatch.utils.helper.Event
 import com.myniprojects.towatch.utils.helper.Message
 import com.myniprojects.towatch.utils.status.EventMessageStatus
@@ -46,7 +47,6 @@ class FirebaseRepository @Inject constructor()
 
     // endregion
 
-
     // region sign in/register
 
     @ExperimentalCoroutinesApi
@@ -80,7 +80,7 @@ class FirebaseRepository @Inject constructor()
             auth.signInWithEmailAndPassword(e, p)
                 .addOnSuccessListener {
                     launch {
-                        send(EventMessageStatus.Failed(Event(Message(R.string.logged_in_correctly))))
+                        send(EventMessageStatus.Success(Event(Message(R.string.logged_in_correctly))))
                         close()
                     }
                 }
@@ -146,14 +146,7 @@ class FirebaseRepository @Inject constructor()
                     launch {
                         send(
                             EventMessageStatus.Failed(
-                                Event(
-                                    Message(
-                                        R.string.something_went_wrong,
-                                        listOf(
-                                            exception.localizedMessage ?: exception.message ?: ""
-                                        )
-                                    )
-                                )
+                                exception.makeEvent
                             )
                         )
                         close()

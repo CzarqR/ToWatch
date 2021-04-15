@@ -1,8 +1,7 @@
 package com.myniprojects.towatch.vm
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myniprojects.towatch.repository.FirebaseRepository
 import com.myniprojects.towatch.utils.ext.trim
@@ -20,9 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    application: Application,
     private val repository: FirebaseRepository
-) : AndroidViewModel(application)
+) : ViewModel()
 {
     val email: MutableLiveData<String> = MutableLiveData()
     val passwd: MutableLiveData<String> = MutableLiveData()
