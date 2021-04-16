@@ -12,7 +12,7 @@
         tools:ignore="AlwaysShowAction" />
 
     <item
-        android:id="@+id/itemRefresh"
+        android:id="@+id/miLogOut"
         android:icon="@drawable/ic_logout_24"
         android:title="@string/log_out"
         app:showAsAction="always" />

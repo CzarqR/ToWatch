@@ -3,40 +3,80 @@ package com.myniprojects.towatch.vm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myniprojects.towatch.model.TmdbResponse
+import com.myniprojects.towatch.repository.FirebaseRepository
 import com.myniprojects.towatch.repository.TmdbRepository
 import com.myniprojects.towatch.utils.status.BaseStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: TmdbRepository
+    private val tmdbRepository: TmdbRepository,
+    private val firebaseRepository: FirebaseRepository
 ) : ViewModel()
 {
-    private val _tmdbResponse: MutableStateFlow<BaseStatus<TmdbResponse>> = MutableStateFlow(
+    val user = firebaseRepository.loggedUser
+
+    private val _tmdbResponseSearch: MutableStateFlow<BaseStatus<TmdbResponse>> = MutableStateFlow(
         BaseStatus.Sleep
     )
-    val tmdbResponse = _tmdbResponse.asStateFlow()
 
-    fun launch(title: String)
-    {
-        viewModelScope.launch {
-            repository.getMoviesByTitle(title).collectLatest {
-                _tmdbResponse.value = it
-            }
+    private val _tmdbResponseTrending: MutableStateFlow<BaseStatus<TmdbResponse>> = MutableStateFlow(
+        BaseStatus.Sleep
+    )
+
+    private val _query: MutableStateFlow<String?> = MutableStateFlow(null)
+    val query = _query.asStateFlow()
+
+    private var searchJob: Job? = null
+
+    @ExperimentalCoroutinesApi
+    val moviesToDisplay: Flow<BaseStatus<TmdbResponse>> = combine(
+        query,
+        _tmdbResponseSearch,
+        _tmdbResponseTrending
+    ) { q, search, trending ->
+        if (q == null)
+        {
+            trending
+        }
+        else
+        {
+            search
         }
     }
 
+    fun search(title: String?)
+    {
+        searchJob?.cancel()
+
+        val t = title?.trim()
+
+        if (!t.isNullOrBlank())
+        {
+            searchJob = viewModelScope.launch {
+                tmdbRepository.getMoviesByTitle(t).collectLatest {
+                    _tmdbResponseSearch.value = it
+                }
+            }
+        }
+
+        _query.value = t
+    }
+
+    fun logOut() = firebaseRepository.logOut()
+
     init
     {
+        search("inception")
         viewModelScope.launch {
-            repository.getTrending().collectLatest {
-                _tmdbResponse.value = it
+            tmdbRepository.getTrending().collectLatest {
+                _tmdbResponseTrending.value = it
             }
         }
     }

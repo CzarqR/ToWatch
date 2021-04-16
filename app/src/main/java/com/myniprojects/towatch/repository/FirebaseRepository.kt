@@ -157,5 +157,7 @@ class FirebaseRepository @Inject constructor()
         awaitClose()
     }
 
+    fun logOut() = auth.signOut()
+
     // endregion
 }

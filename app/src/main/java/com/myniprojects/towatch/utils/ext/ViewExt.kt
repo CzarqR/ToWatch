@@ -2,6 +2,7 @@ package com.myniprojects.towatch.utils.ext
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -52,3 +53,9 @@ fun Fragment.hideKeyboard()
 {
     requireActivity().hideKeyboard()
 }
+
+val Int.pxToDp: Int
+    get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+val Int.dpToPx: Int
+    get() = (this * Resources.getSystem().displayMetrics.density).toInt()

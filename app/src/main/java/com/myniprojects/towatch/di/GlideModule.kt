@@ -24,8 +24,8 @@ object GlideModule
     ): RequestManager =
             Glide.with(context).setDefaultRequestOptions(
                 RequestOptions()
-                    .placeholder(R.drawable.ic_outline_image_24)
-                    .error(R.drawable.ic_outline_broken_image_24)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .error(R.drawable.ic_film)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             )
+
 }

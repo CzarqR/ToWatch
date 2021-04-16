@@ -3,9 +3,11 @@ package com.myniprojects.towatch.ui.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.myniprojects.towatch.R
 import com.myniprojects.towatch.adapters.movieadapter.MovieAdapter
 import com.myniprojects.towatch.adapters.movieadapter.MovieClickListener
@@ -16,11 +18,13 @@ import com.myniprojects.towatch.utils.helper.viewBinding
 import com.myniprojects.towatch.utils.status.BaseStatus
 import com.myniprojects.towatch.vm.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 class SearchFragment : Fragment(R.layout.fragment_search)
 {
     @Inject
@@ -62,11 +66,11 @@ class SearchFragment : Fragment(R.layout.fragment_search)
         searchView = menuItemSearch!!.actionView as SearchView
 
         // change searchText if it has been set
-//        viewModel.queryFlow.value?.let {
-//            menuItemSearch!!.expandActionView()
-//            searchView!!.setQuery(it, false)
-//            searchView!!.clearFocus()
-//        }
+        viewModel.query.value?.let {
+            menuItemSearch!!.expandActionView()
+            searchView!!.setQuery(it, false)
+            searchView!!.clearFocus()
+        }
 
         searchView!!.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener
@@ -74,7 +78,7 @@ class SearchFragment : Fragment(R.layout.fragment_search)
                 override fun onQueryTextSubmit(textInput: String?): Boolean
                 {
                     hideKeyboard()
-//                    viewModel.submitQuery(textInput)
+                    viewModel.search(textInput)
                     return true
                 }
 
@@ -92,7 +96,7 @@ class SearchFragment : Fragment(R.layout.fragment_search)
                  */
                 override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean
                 {
-//                    viewModel.submitQuery(null)
+                    viewModel.search(null)
                     return true
                 }
             }
@@ -118,28 +122,59 @@ class SearchFragment : Fragment(R.layout.fragment_search)
     private fun setupCollecting()
     {
         lifecycleScope.launchWhenStarted {
-            viewModel.tmdbResponse.collectLatest {
+            viewModel.moviesToDisplay.collectLatest {
                 Timber.d("Collected $it")
                 when (it)
                 {
-                    is BaseStatus.Failed ->
+                    BaseStatus.Sleep ->
                     {
-
+                        binding.proBarLoading.isVisible = false
+                        binding.rvMovies.isVisible = true
                     }
                     BaseStatus.Loading ->
                     {
-
-                    }
-                    BaseStatus.Sleep ->
-                    {
-
+                        binding.proBarLoading.isVisible = true
+                        binding.rvMovies.isVisible = false
                     }
                     is BaseStatus.Success ->
                     {
+                        binding.proBarLoading.isVisible = false
+                        binding.rvMovies.isVisible = true
+
                         movieAdapter.submitList(it.data.movies)
+                    }
+                    is BaseStatus.Failed ->
+                    {
+
                     }
                 }.exhaustive
             }
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        return when (item.itemId)
+        {
+            R.id.miLogOut ->
+            {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(resources.getString(R.string.sign_out))
+                    .setMessage(resources.getString(R.string.log_out_confirmation))
+                    .setNeutralButton(resources.getString(R.string.cancel)) { _, _ ->
+                    }
+                    .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+                        viewModel.logOut()
+                    }
+                    .show()
+
+                true
+            }
+            else ->
+            {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
 }

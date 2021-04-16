@@ -35,14 +35,26 @@
 
             <ImageView
                 android:id="@+id/imgPoster"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/movie_poster"
+                android:scaleType="fitCenter"
+                app:layout_constraintDimensionRatio="H,16:9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/backgrounds/scenic"
+                tools:srcCompat="@drawable/ic_film"
+                />
+
+            <ProgressBar
+                android:id="@+id/proBarImageLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/imgPoster"
+                app:layout_constraintEnd_toEndOf="@+id/imgPoster"
+                app:layout_constraintStart_toStartOf="@+id/imgPoster"
+                app:layout_constraintTop_toTopOf="@+id/imgPoster"
                 />
 
             <com.google.android.material.textview.MaterialTextView
@@ -52,12 +64,12 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginEnd="12dp"
+                android:text="@{movie.title}"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imgPoster"
                 tools:text="Harry Potter"
-                android:text="@{movie.title}"
                 />
 
             <com.google.android.material.textview.MaterialTextView
@@ -68,6 +80,7 @@
                 android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="@dimen/medium_margin"
+                android:text="@{movie.overview}"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?android:attr/textColorSecondary"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -75,7 +88,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 tools:text="Determined to ensure Superman's ultimate sacrifice was not in vain, Bruce Wayne aligns forces with Diana Prince with plans to recruit a team of metahumans to protect the world from an approaching threat of catastrophic proportions."
-                android:text="@{movie.overview}"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

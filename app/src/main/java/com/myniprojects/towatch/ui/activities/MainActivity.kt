@@ -2,7 +2,9 @@ package com.myniprojects.towatch.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -11,12 +13,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.myniprojects.towatch.R
 import com.myniprojects.towatch.databinding.ActivityMainBinding
 import com.myniprojects.towatch.utils.helper.viewBinding
+import com.myniprojects.towatch.vm.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity()
 {
-    //    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModels()
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     private lateinit var navController: NavController
@@ -26,6 +30,7 @@ class MainActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setupCollecting()
         setupNavigation()
     }
 
@@ -55,4 +60,16 @@ class MainActivity : AppCompatActivity()
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
+
+    private fun setupCollecting()
+    {
+        lifecycleScope.launchWhenStarted {
+            viewModel.user.collectLatest {
+                if (it == null)
+                {
+                    signOut()
+                }
+            }
+        }
+    }
 }

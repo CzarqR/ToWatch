@@ -15,7 +15,7 @@ data class Movie(
     @Json(name = "poster_path")
     val posterPath: String?,
     @Json(name = "release_date")
-    val releaseDate: String,
+    val releaseDate: String?,
     val title: String,
     @Json(name = "vote_average")
     val voteAverage: Double,
@@ -24,5 +24,23 @@ data class Movie(
 )
 {
     val fullPath: String?
-        get() = if (backdropPath != null) "$IMAGE_BASE_URL$backdropPath" else null
+        get()
+        {
+            return when
+            {
+                backdropPath != null ->
+                {
+                    "$IMAGE_BASE_URL$backdropPath"
+                }
+                posterPath != null ->
+                {
+                    "$IMAGE_BASE_URL$posterPath"
+                }
+                else ->
+                {
+                    null
+                }
+            }
+        }
+
 }
