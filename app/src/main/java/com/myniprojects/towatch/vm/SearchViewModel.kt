@@ -21,12 +21,21 @@ class SearchViewModel @Inject constructor(
     private val _tmdbResponse: MutableStateFlow<BaseStatus<TmdbResponse>> = MutableStateFlow(
         BaseStatus.Sleep
     )
-    val weatherResponse = _tmdbResponse.asStateFlow()
+    val tmdbResponse = _tmdbResponse.asStateFlow()
 
     fun launch(title: String)
     {
         viewModelScope.launch {
             repository.getMoviesByTitle(title).collectLatest {
+                _tmdbResponse.value = it
+            }
+        }
+    }
+
+    init
+    {
+        viewModelScope.launch {
+            repository.getTrending().collectLatest {
                 _tmdbResponse.value = it
             }
         }

@@ -19,4 +19,8 @@
     <string name="search">Search</string>
     <string name="towatch">ToWatch</string>
     <string name="watched">Watched</string>
+    <string name="log_out">Log out</string>
+    <string name="trending_now">Trending now</string>
+    <string name="watched_fragment_title">Watched movies and tv shows</string>
+    <string name="movie_poster">Moview poster</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.myniprojects.towatch.R
 import com.myniprojects.towatch.databinding.ActivityMainBinding
@@ -47,6 +48,10 @@ class MainActivity : AppCompatActivity()
 
         binding.bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
         binding.bottomNavigationView.setOnNavigationItemReselectedListener { /*to not reload fragment again*/ }
+
+        // beck button
+        navController = navHostFragment.navController
+        NavigationUI.setupActionBarWithNavController(this, navController)
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()

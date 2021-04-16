@@ -3,15 +3,15 @@
 
     <item
         android:id="@+id/searchFragment"
-        android:icon="@drawable/ic_outline_person_add_24"
+        android:icon="@drawable/ic_baseline_search_24"
         android:title="@string/search" />
     <item
         android:id="@+id/toWatchFragment"
-        android:icon="@drawable/ic_outline_person_add_24"
+        android:icon="@drawable/ic_outline_movie_24"
         android:title="@string/towatch" />
     <item
         android:id="@+id/watchedFragment"
-        android:icon="@drawable/ic_outline_person_add_24"
+        android:icon="@drawable/ic_outline_task_alt_24"
         android:title="@string/watched" />
 
 </menu>

@@ -6,13 +6,13 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.myniprojects.towatch.ui.fragments.SearchFragment"
-        android:label="SearchFragment" />
+        android:label="@string/trending_now" />
     <fragment
         android:id="@+id/toWatchFragment"
         android:name="com.myniprojects.towatch.ui.fragments.ToWatchFragment"
-        android:label="ToWatchFragment" />
+        android:label="@string/towatch" />
     <fragment
         android:id="@+id/watchedFragment"
         android:name="com.myniprojects.towatch.ui.fragments.WatchedFragment"
-        android:label="WatchedFragment" />
+        android:label="@string/watched_fragment_title" />
 </navigation>

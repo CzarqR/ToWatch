@@ -14,4 +14,10 @@ interface TmdbService
     suspend fun getMovieFromTitle(
         @Query("query") title: String,
     ): TmdbResponse
+
+    /**
+     * Get trending movies in current week: https://developers.themoviedb.org/3/trending/get-trending
+     */
+    @GET("trending/movie/week?api_key=${API_KEY}")
+    suspend fun getTrendingMovies(): TmdbResponse
 }
