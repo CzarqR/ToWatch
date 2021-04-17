@@ -16,6 +16,7 @@ import com.myniprojects.towatch.utils.helper.viewBinding
 import com.myniprojects.towatch.vm.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity()
@@ -57,6 +58,12 @@ class MainActivity : AppCompatActivity()
         // beck button
         navController = navHostFragment.navController
         NavigationUI.setupActionBarWithNavController(this, navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            Timber.d("Destination: $destination")
+            binding.appBarLayout.setExpanded(true)
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()

@@ -8,7 +8,7 @@
 
         <variable
             name="movie"
-            type="com.myniprojects.towatch.model.Movie"
+            type="com.myniprojects.towatch.model.LocalMovie"
             />
 
         <variable
@@ -26,6 +26,8 @@
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
         app:cardCornerRadius="16dp"
+        android:onClick="@{() -> movieClickListener.movieClick(movie)}"
+        android:background="?selectableItemBackground"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout

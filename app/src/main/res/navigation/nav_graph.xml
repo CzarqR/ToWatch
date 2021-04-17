@@ -7,13 +7,33 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.myniprojects.towatch.ui.fragments.SearchFragment"
-        android:label="@string/trending_now" />
+        android:label="@string/trending_now">
+        <action
+            android:id="@+id/action_searchFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/toWatchFragment"
         android:name="com.myniprojects.towatch.ui.fragments.ToWatchFragment"
-        android:label="@string/towatch" />
+        android:label="@string/towatch">
+        <action
+            android:id="@+id/action_toWatchFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/watchedFragment"
         android:name="com.myniprojects.towatch.ui.fragments.WatchedFragment"
-        android:label="@string/watched_fragment_title" />
+        android:label="@string/watched_fragment_title">
+        <action
+            android:id="@+id/action_watchedFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.myniprojects.towatch.ui.fragments.DetailsFragment"
+        android:label="DetailsFragment">
+        <argument
+            android:name="movieToDisplay"
+            app:argType="com.myniprojects.towatch.model.LocalMovie" />
+    </fragment>
 </navigation>

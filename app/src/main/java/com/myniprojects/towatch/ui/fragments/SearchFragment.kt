@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.myniprojects.towatch.R
 import com.myniprojects.towatch.adapters.movieadapter.MovieAdapter
@@ -109,8 +110,13 @@ class SearchFragment : Fragment(R.layout.fragment_search)
     private fun setupView()
     {
         val movieClickListener = MovieClickListener(
-            movieClick = {
-                Timber.d("Movie with id $it was clicked")
+            movieClickListener = {
+                Timber.d("Movie $it was clicked")
+
+                val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(
+                    movieToDisplay = it,
+                )
+                findNavController().navigate(action)
             }
         )
 
@@ -141,7 +147,7 @@ class SearchFragment : Fragment(R.layout.fragment_search)
                         binding.proBarLoading.isVisible = false
                         binding.rvMovies.isVisible = true
 
-                        movieAdapter.submitList(it.data.movies)
+                        movieAdapter.submitList(it.data)
                     }
                     is BaseStatus.Failed ->
                     {

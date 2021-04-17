@@ -1,13 +1,13 @@
 package com.myniprojects.towatch.adapters.movieadapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.myniprojects.towatch.model.Movie
+import com.myniprojects.towatch.model.LocalMovie
 
-object MovieDiffCallback : DiffUtil.ItemCallback<Movie>()
+object MovieDiffCallback : DiffUtil.ItemCallback<LocalMovie>()
 {
-    override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+    override fun areItemsTheSame(oldItem: LocalMovie, newItem: LocalMovie): Boolean =
             oldItem.id == newItem.id
 
-    override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+    override fun areContentsTheSame(oldItem: LocalMovie, newItem: LocalMovie): Boolean =
             oldItem == newItem
 }

@@ -3,12 +3,12 @@ package com.myniprojects.towatch.adapters.movieadapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.RequestManager
-import com.myniprojects.towatch.model.Movie
+import com.myniprojects.towatch.model.LocalMovie
 import javax.inject.Inject
 
 class MovieAdapter @Inject constructor(
     private val glide: RequestManager
-) : ListAdapter<Movie, MovieViewHolder>(MovieDiffCallback)
+) : ListAdapter<LocalMovie, MovieViewHolder>(MovieDiffCallback)
 {
     lateinit var movieClickListener: MovieClickListener
 

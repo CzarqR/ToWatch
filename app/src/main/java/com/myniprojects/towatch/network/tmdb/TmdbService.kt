@@ -1,6 +1,5 @@
-package com.myniprojects.towatch.network
+package com.myniprojects.towatch.network.tmdb
 
-import com.myniprojects.towatch.model.TmdbResponse
 import com.myniprojects.towatch.utils.const.API_KEY
 import retrofit2.http.GET
 import retrofit2.http.Query

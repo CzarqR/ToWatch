@@ -1,6 +1,6 @@
 package com.myniprojects.towatch.di
 
-import com.myniprojects.towatch.network.TmdbService
+import com.myniprojects.towatch.network.tmdb.TmdbService
 import com.myniprojects.towatch.utils.const.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

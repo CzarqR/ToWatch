@@ -6,7 +6,10 @@ import android.content.res.Resources
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -49,6 +52,11 @@ fun Activity.hideKeyboard()
     }
 }
 
+fun AppCompatActivity.setActionBarTitle(title: String)
+{
+    supportActionBar?.title = title
+}
+
 fun Fragment.hideKeyboard()
 {
     requireActivity().hideKeyboard()
@@ -59,3 +67,16 @@ val Int.pxToDp: Int
 
 val Int.dpToPx: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+fun TextView.setTextOrGone(text: String?)
+{
+    isVisible = if (text == null)
+    {
+        false
+    }
+    else
+    {
+        setText(text)
+        true
+    }
+}

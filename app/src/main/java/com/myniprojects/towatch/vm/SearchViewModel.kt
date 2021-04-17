@@ -2,7 +2,7 @@ package com.myniprojects.towatch.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myniprojects.towatch.model.TmdbResponse
+import com.myniprojects.towatch.model.LocalMovie
 import com.myniprojects.towatch.repository.FirebaseRepository
 import com.myniprojects.towatch.repository.TmdbRepository
 import com.myniprojects.towatch.utils.status.BaseStatus
@@ -22,11 +22,11 @@ class SearchViewModel @Inject constructor(
 {
     val user = firebaseRepository.loggedUser
 
-    private val _tmdbResponseSearch: MutableStateFlow<BaseStatus<TmdbResponse>> = MutableStateFlow(
+    private val _tmdbResponseSearch: MutableStateFlow<BaseStatus<List<LocalMovie>>> = MutableStateFlow(
         BaseStatus.Sleep
     )
 
-    private val _tmdbResponseTrending: MutableStateFlow<BaseStatus<TmdbResponse>> = MutableStateFlow(
+    private val _tmdbResponseTrending: MutableStateFlow<BaseStatus<List<LocalMovie>>> = MutableStateFlow(
         BaseStatus.Sleep
     )
 
@@ -36,7 +36,7 @@ class SearchViewModel @Inject constructor(
     private var searchJob: Job? = null
 
     @ExperimentalCoroutinesApi
-    val moviesToDisplay: Flow<BaseStatus<TmdbResponse>> = combine(
+    val moviesToDisplay: Flow<BaseStatus<List<LocalMovie>>> = combine(
         query,
         _tmdbResponseSearch,
         _tmdbResponseTrending

@@ -21,11 +21,13 @@
     <string name="watched">Watched</string>
     <string name="log_out">Log out</string>
     <string name="trending_now">Trending now</string>
-    <string name="watched_fragment_title">Watched movies and tv shows</string>
-    <string name="movie_poster">Moview poster</string>
+    <string name="watched_fragment_title">Watched movies</string>
+    <string name="movie_poster">Movie poster</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="sign_out">Sign out</string>
     <string name="cancel">Cancel</string>
+    <string name="popularity_format">Popularity: %.1f</string>
+    <string name="vote_format">Votes: %d</string>
 </resources>

@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.myniprojects.towatch.databinding.MovieItemBinding
-import com.myniprojects.towatch.model.Movie
+import com.myniprojects.towatch.model.LocalMovie
 import com.myniprojects.towatch.utils.ext.dpToPx
 
 class MovieViewHolder private constructor(
@@ -36,7 +36,7 @@ class MovieViewHolder private constructor(
     fun bind(
         glide: RequestManager,
         movieClickListener: MovieClickListener,
-        movie: Movie
+        movie: LocalMovie
     )
     {
 

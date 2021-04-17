@@ -1,4 +1,4 @@
-package com.myniprojects.towatch.model
+package com.myniprojects.towatch.network.tmdb
 
 
 import com.squareup.moshi.Json
@@ -8,7 +8,7 @@ import com.squareup.moshi.JsonClass
 data class TmdbResponse(
     val page: Int,
     @Json(name = "results")
-    val movies: List<Movie>,
+    val movies: List<MovieTmdb>,
     @Json(name = "total_pages")
     val totalPages: Int,
     @Json(name = "total_results")
