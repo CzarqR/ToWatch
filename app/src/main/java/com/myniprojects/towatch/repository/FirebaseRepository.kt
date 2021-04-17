@@ -2,8 +2,11 @@ package com.myniprojects.towatch.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.myniprojects.towatch.R
+import com.myniprojects.towatch.model.LocalMovie
+import com.myniprojects.towatch.utils.const.DatabaseFields
 import com.myniprojects.towatch.utils.const.PASSWD_MIN_LENGTH
 import com.myniprojects.towatch.utils.ext.makeEvent
 import com.myniprojects.towatch.utils.helper.Event
@@ -23,6 +26,14 @@ import javax.inject.Singleton
 @Singleton
 class FirebaseRepository @Inject constructor()
 {
+    companion object
+    {
+        private val userMovieData = Firebase.database.getReference(DatabaseFields.USERS_MOVIE_DATA)
+
+        private fun getUserDataDbRef(id: String) = userMovieData.child(id)
+
+    }
+
     // region logged user
 
     private val auth = Firebase.auth
@@ -158,6 +169,38 @@ class FirebaseRepository @Inject constructor()
     }
 
     fun logOut() = auth.signOut()
+
+    // endregion
+
+    // region user movie data
+
+    @ExperimentalCoroutinesApi
+    fun addToWatch(movie: LocalMovie): Flow<EventMessageStatus> = channelFlow {
+
+        send(EventMessageStatus.Loading)
+
+        val movieData = hashMapOf(
+            DatabaseFields.MOVIE_TITLE_FIELD to movie.title,
+        )
+
+        getUserDataDbRef(requireUser.uid).child(movie.id.toString()).setValue(movieData)
+            .addOnSuccessListener {
+                Timber.d("Movie [$movieData] saved successfully")
+                launch {
+                    send(EventMessageStatus.Success(Event(Message(R.string.movie_added_towatch))))
+                    close()
+                }
+            }
+            .addOnFailureListener {
+                Timber.d("Movie [$movieData] was NOT saved successfully")
+                launch {
+                    send(EventMessageStatus.Failed(it.makeEvent))
+                    close()
+                }
+            }
+
+        awaitClose()
+    }
 
     // endregion
 }

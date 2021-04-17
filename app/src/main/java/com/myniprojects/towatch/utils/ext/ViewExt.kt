@@ -13,6 +13,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.myniprojects.towatch.R
+import com.myniprojects.towatch.utils.helper.Event
+import com.myniprojects.towatch.utils.helper.Message
 
 fun CoordinatorLayout.showSnackbar(
     message: String,
@@ -78,5 +81,15 @@ fun TextView.setTextOrGone(text: String?)
     {
         setText(text)
         true
+    }
+}
+
+fun Context.tryShowSnackbarOK(coordinatorLayout: CoordinatorLayout, eventMessage: Event<Message>)
+{
+    eventMessage.getContentIfNotHandled()?.let {
+        coordinatorLayout.showSnackbar(
+            message = it.getFormattedMessage(this),
+            buttonText = getString(R.string.ok)
+        )
     }
 }

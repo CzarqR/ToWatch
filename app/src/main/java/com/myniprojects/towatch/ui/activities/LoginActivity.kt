@@ -10,9 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.myniprojects.towatch.R
 import com.myniprojects.towatch.databinding.ActivityLoginBinding
 import com.myniprojects.towatch.utils.ext.exhaustive
-import com.myniprojects.towatch.utils.ext.showSnackbar
-import com.myniprojects.towatch.utils.helper.Event
-import com.myniprojects.towatch.utils.helper.Message
+import com.myniprojects.towatch.utils.ext.tryShowSnackbarOK
 import com.myniprojects.towatch.utils.helper.viewBinding
 import com.myniprojects.towatch.utils.status.EventMessageStatus
 import com.myniprojects.towatch.vm.LoginViewModel
@@ -115,23 +113,15 @@ class LoginActivity : AppCompatActivity()
             is EventMessageStatus.Success ->
             {
                 binding.proBarLoading.isVisible = false
-                tryShowSnackbar(event.successEvent)
+                tryShowSnackbarOK(binding.cdRoot, event.successEvent)
             }
             is EventMessageStatus.Failed ->
             {
                 binding.proBarLoading.isVisible = false
-                tryShowSnackbar(event.errorEvent)
+                tryShowSnackbarOK(binding.cdRoot, event.errorEvent)
             }
         }.exhaustive
     }
 
-    private fun tryShowSnackbar(eventMessage: Event<Message>)
-    {
-        eventMessage.getContentIfNotHandled()?.let {
-            binding.cdRoot.showSnackbar(
-                message = it.getFormattedMessage(this),
-                buttonText = getString(R.string.ok)
-            )
-        }
-    }
+
 }

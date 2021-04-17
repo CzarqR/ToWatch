@@ -30,4 +30,6 @@
     <string name="cancel">Cancel</string>
     <string name="popularity_format">Popularity: %.1f</string>
     <string name="vote_format">Votes: %d</string>
+    <string name="votes_icon">Votes icon</string>
+    <string name="movie_added_towatch">"Movie added to ToWatch "</string>
 </resources>
