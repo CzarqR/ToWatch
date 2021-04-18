@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.myniprojects.towatch.R
 import com.myniprojects.towatch.databinding.ActivityLoginBinding
 import com.myniprojects.towatch.utils.ext.exhaustive
+import com.myniprojects.towatch.utils.ext.hideKeyboard
 import com.myniprojects.towatch.utils.ext.tryShowSnackbarOK
 import com.myniprojects.towatch.utils.helper.viewBinding
 import com.myniprojects.towatch.utils.status.EventMessageStatus
@@ -109,6 +110,7 @@ class LoginActivity : AppCompatActivity()
             EventMessageStatus.Loading ->
             {
                 binding.proBarLoading.isVisible = true
+                hideKeyboard()
             }
             is EventMessageStatus.Success ->
             {

@@ -3,37 +3,41 @@ package com.myniprojects.towatch.ui.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.myniprojects.towatch.R
-import com.myniprojects.towatch.adapters.movieadapter.MovieAdapter
-import com.myniprojects.towatch.adapters.movieadapter.MovieClickListener
-import com.myniprojects.towatch.databinding.FragmentSearchBinding
-import com.myniprojects.towatch.utils.ext.exhaustive
+import com.myniprojects.towatch.model.LocalMovie
 import com.myniprojects.towatch.utils.ext.hideKeyboard
-import com.myniprojects.towatch.utils.helper.viewBinding
 import com.myniprojects.towatch.utils.status.BaseStatus
 import com.myniprojects.towatch.vm.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class SearchFragment : Fragment(R.layout.fragment_search)
+class SearchFragment : RecyclerFragment()
 {
-    @Inject
-    lateinit var movieAdapter: MovieAdapter
-
     private val viewModel: SearchViewModel by activityViewModels()
 
-    private val binding by viewBinding(FragmentSearchBinding::bind)
+    override val moviesToDisplay: Flow<BaseStatus<List<LocalMovie>>>
+        get() = viewModel.moviesToDisplay
+
+    override fun actionToDetails(movie: LocalMovie)
+    {
+        findNavController().navigate(
+            SearchFragmentDirections.actionSearchFragmentToDetailsFragment(
+                movieToDisplay = movie,
+            )
+        )
+    }
+
+    override val imgEmpty: Int
+        get() = R.drawable.ic_outline_search_off_24
+    override val txtEmpty: Int
+        get() = R.string.empty_result_search
+
 
     private var menuItemSearch: MenuItem? = null
     private var searchView: SearchView? = null
@@ -46,14 +50,6 @@ class SearchFragment : Fragment(R.layout.fragment_search)
     {
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupView()
-        setupCollecting()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
@@ -104,58 +100,6 @@ class SearchFragment : Fragment(R.layout.fragment_search)
         )
 
         // endregion
-    }
-
-
-    private fun setupView()
-    {
-        val movieClickListener = MovieClickListener(
-            movieClickListener = {
-                Timber.d("Movie $it was clicked")
-
-                val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(
-                    movieToDisplay = it,
-                )
-                findNavController().navigate(action)
-            }
-        )
-
-        movieAdapter.movieClickListener = movieClickListener
-
-        binding.rvMovies.adapter = movieAdapter
-    }
-
-    private fun setupCollecting()
-    {
-        lifecycleScope.launchWhenStarted {
-            viewModel.moviesToDisplay.collectLatest {
-                Timber.d("Collected $it")
-                when (it)
-                {
-                    BaseStatus.Sleep ->
-                    {
-                        binding.proBarLoading.isVisible = false
-                        binding.rvMovies.isVisible = true
-                    }
-                    BaseStatus.Loading ->
-                    {
-                        binding.proBarLoading.isVisible = true
-                        binding.rvMovies.isVisible = false
-                    }
-                    is BaseStatus.Success ->
-                    {
-                        binding.proBarLoading.isVisible = false
-                        binding.rvMovies.isVisible = true
-
-                        movieAdapter.submitList(it.data)
-                    }
-                    is BaseStatus.Failed ->
-                    {
-
-                    }
-                }.exhaustive
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean

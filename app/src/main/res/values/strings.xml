@@ -35,4 +35,7 @@
     <string name="movie_added_to_watched">Movie added to watched</string>
     <string name="unwatched">Unwatched</string>
     <string name="remove_towatch">Remove ToWatch</string>
+    <string name="no_result_icon">No result icon</string>
+    <string name="empty_result_search">There isn\'t any result with given movie title</string>
+    <string name="empty_result_towatch">You haven\'t add any movies yet</string>
 </resources>

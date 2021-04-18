@@ -1,36 +1,31 @@
 package com.myniprojects.towatch.ui.fragments
 
-import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.myniprojects.towatch.R
-import com.myniprojects.towatch.databinding.FragmentWatchedBinding
-import com.myniprojects.towatch.utils.helper.viewBinding
+import com.myniprojects.towatch.model.LocalMovie
+import com.myniprojects.towatch.utils.status.BaseStatus
 import com.myniprojects.towatch.vm.SavedMoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
+import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
-class WatchedFragment : Fragment(R.layout.fragment_watched)
+class WatchedFragment : RecyclerFragment()
 {
-    private val binding by viewBinding(FragmentWatchedBinding::bind)
     private val viewModel: SavedMoviesViewModel by activityViewModels()
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
-        super.onViewCreated(view, savedInstanceState)
-        setupCollecting()
-    }
 
-    private fun setupCollecting()
+    override val moviesToDisplay: Flow<BaseStatus<List<LocalMovie>>>
+        get() = viewModel.watchedMovies
+
+    override val imgEmpty: Int
+        get() = R.drawable.ic_outline_movie_24
+    override val txtEmpty: Int
+        get() = R.string.empty_result_towatch
+
+    override fun actionToDetails(movie: LocalMovie)
     {
-        lifecycleScope.launchWhenStarted {
-            viewModel.watchedMovies.collectLatest {
-                Timber.d("watchedMovies: $it")
-            }
-        }
+        findNavController().navigate(
+            WatchedFragmentDirections.actionWatchedFragmentToDetailsFragment(movieToDisplay = movie)
+        )
     }
 }

@@ -16,14 +16,17 @@
         android:theme="@style/Theme.ToWatch">
 
         <activity
-            android:name=".ui.activities.LoginActivity">
+            android:name=".ui.activities.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.MainActivity" />
+        <activity
+            android:name=".ui.activities.MainActivity"
+            android:screenOrientation="portrait" />
 
 
     </application>

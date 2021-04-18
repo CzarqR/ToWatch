@@ -35,16 +35,6 @@ class LoginViewModel @Inject constructor(
 
     val user = repository.loggedUser
 
-    init
-    {
-        /**
-         * TODO. Delete it later, now it is only to test faster
-         */
-        email.value = "test1@gmail.com"
-        passwd.value = "123456"
-        passwdConf.value = "123456"
-    }
-
     fun changeState()
     {
         Timber.d("Change login state")
