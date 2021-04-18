@@ -1,5 +1,8 @@
 package com.myniprojects.towatch.utils.const
 
+import com.google.firebase.database.GenericTypeIndicator
+import com.myniprojects.towatch.network.firebase.FirebaseMovie
+
 object DatabaseFields
 {
     const val USERS_MOVIE_DATA = "UsersMovieData"
@@ -12,6 +15,11 @@ object DatabaseFields
     const val MOVIE_RELEASE_DATE_FIELD = "releaseDate"
     const val MOVIE_VOTE_AVERAGE_FIELD = "voteAverage"
     const val MOVIE_VOTE_COUNT_FIELD = "voteCount"
-    const val MOVIE_IS_WATCHED_FIELD = "isWatched"
+    const val MOVIE_IS_WATCHED_FIELD = "watched"
+
+    val FirebaseMovieInstance = object : GenericTypeIndicator<Map<String, FirebaseMovie>>()
+    {
+
+    }
 
 }

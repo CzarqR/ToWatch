@@ -32,7 +32,7 @@ data class MovieTmdb(
             return if (canMapToLocalMovie)
             {
                 LocalMovie(
-                    id = id!!,
+                    id = id!!.toString(),
                     title = title!!,
                     overview = overview!!,
                     backdropPath = backdropPath,

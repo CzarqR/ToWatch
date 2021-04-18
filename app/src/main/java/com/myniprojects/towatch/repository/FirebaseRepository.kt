@@ -4,17 +4,18 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.myniprojects.towatch.R
 import com.myniprojects.towatch.model.LocalMovie
+import com.myniprojects.towatch.network.firebase.toLocalMovie
 import com.myniprojects.towatch.utils.const.DatabaseFields
 import com.myniprojects.towatch.utils.const.PASSWD_MIN_LENGTH
 import com.myniprojects.towatch.utils.ext.makeEvent
 import com.myniprojects.towatch.utils.helper.Event
 import com.myniprojects.towatch.utils.helper.Message
+import com.myniprojects.towatch.utils.helper.QueryListener
 import com.myniprojects.towatch.utils.status.BaseStatus
 import com.myniprojects.towatch.utils.status.EventMessageStatus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -194,7 +195,7 @@ class FirebaseRepository @Inject constructor()
             this.isWatched = isWatched
         }.dbHashMap()
 
-        getUserAllMoviesDataDbRef(requireUser.uid).child(movie.id.toString()).setValue(movieData)
+        getUserAllMoviesDataDbRef(requireUser.uid).child(movie.id).setValue(movieData)
             .addOnSuccessListener {
                 Timber.d("Movie [$movieData] saved successfully")
                 launch {
@@ -213,20 +214,14 @@ class FirebaseRepository @Inject constructor()
         awaitClose()
     }
 
-    private var isWatchedListener: Pair<Query, ValueEventListener>? = null
+    var isWatchedListener: QueryListener? = null
+        private set
 
-    fun removeWatchedListener()
-    {
-        isWatchedListener?.let {
-            it.first.removeEventListener(it.second)
-        }
-        isWatchedListener = null
-    }
 
     @ExperimentalCoroutinesApi
     fun getMovieIsWatched(movieId: String): Flow<BaseStatus<Boolean?>> = channelFlow {
 
-        removeWatchedListener()
+        isWatchedListener?.removeListener()
 
         send(BaseStatus.Loading)
 
@@ -254,9 +249,8 @@ class FirebaseRepository @Inject constructor()
             }
         }
 
-        isWatchedListener = q to l
-
-        q.addValueEventListener(l)
+        isWatchedListener = QueryListener(q, l)
+        isWatchedListener?.addListener()
 
         awaitClose()
     }
@@ -266,6 +260,61 @@ class FirebaseRepository @Inject constructor()
         getUserMovieDbRef(requireUser.uid, movieId).ref.removeValue()
     }
 
+
+    var allMoviesListener: QueryListener? = null
+        private set
+
+    @ExperimentalCoroutinesApi
+    fun getAllMovies(): Flow<BaseStatus<List<LocalMovie>>> = channelFlow {
+        send(BaseStatus.Loading)
+        allMoviesListener?.removeListener()
+
+        val q = getUserAllMoviesDataDbRef(requireUser.uid)
+        val l = object : ValueEventListener
+        {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                Timber.d("Get all movies request completed. $snapshot")
+                val movies = snapshot.getValue(DatabaseFields.FirebaseMovieInstance)
+                Timber.d(movies.toString())
+                if (movies == null)
+                {
+                    launch {
+                        send(BaseStatus.Success<List<LocalMovie>>(listOf()))
+                    }
+                }
+                else
+                {
+                    launch {
+                        send(
+                            BaseStatus.Success(
+                                movies.map {
+                                    it.toLocalMovie()
+                                }
+                            )
+                        )
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError)
+            {
+                Timber.d("Get all movies request cancelled")
+                launch {
+                    send(
+                        BaseStatus.Failed(
+                            error.toException().makeEvent
+                        )
+                    )
+                }
+            }
+        }
+
+        allMoviesListener = QueryListener(q, l)
+        allMoviesListener?.addListener()
+
+        awaitClose()
+    }
 
     // endregion
 }

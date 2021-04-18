@@ -28,9 +28,8 @@ class DetailsViewModel @Inject constructor(
     @ExperimentalCoroutinesApi
     fun addMovieToWatch(movie: LocalMovie, isWatched: Boolean)
     {
-        Timber.d("VM localMovie isWatched ${movie.isWatched}")
         /**
-         * if [_addingState]is not Loading make new request
+         * if [_addingState] is not Loading make new request
          */
         if (_addingState.value != EventMessageStatus.Loading)
         {
@@ -48,8 +47,8 @@ class DetailsViewModel @Inject constructor(
     override fun onCleared()
     {
         super.onCleared()
-        Timber.d("ViewModel cleared")
-        firebaseRepository.removeWatchedListener()
+        Timber.d("DetailsViewModel cleared")
+        firebaseRepository.isWatchedListener?.removeListener()
     }
 
     fun removeMovie(movieId: String) = firebaseRepository.removeMovie(movieId)

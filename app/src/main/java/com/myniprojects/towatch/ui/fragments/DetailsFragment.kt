@@ -139,7 +139,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details)
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.getMovieIsWatched(movie.id.toString()).collectLatest {
+            viewModel.getMovieIsWatched(movie.id).collectLatest {
 
                 Timber.d("isWatched status: $isWatched")
 
@@ -183,7 +183,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details)
         binding.butAddToWatch.setOnClickListener {
             if (isWatched == false)
             {
-                viewModel.removeMovie(movie.id.toString())
+                viewModel.removeMovie(movie.id)
             }
             else
             {
@@ -194,7 +194,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details)
         binding.butAddToWatched.setOnClickListener {
             if (isWatched == true)
             {
-                viewModel.removeMovie(movie.id.toString())
+                viewModel.removeMovie(movie.id)
             }
             else
             {

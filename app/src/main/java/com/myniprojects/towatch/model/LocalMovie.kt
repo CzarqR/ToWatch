@@ -16,7 +16,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class LocalMovie(
-    val id: Int,
+    val id: String,
     val title: String,
     val overview: String,
     val backdropPath: String?,
