@@ -2,6 +2,10 @@ package com.myniprojects.towatch.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.myniprojects.towatch.R
@@ -11,6 +15,7 @@ import com.myniprojects.towatch.utils.const.PASSWD_MIN_LENGTH
 import com.myniprojects.towatch.utils.ext.makeEvent
 import com.myniprojects.towatch.utils.helper.Event
 import com.myniprojects.towatch.utils.helper.Message
+import com.myniprojects.towatch.utils.status.BaseStatus
 import com.myniprojects.towatch.utils.status.EventMessageStatus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -30,8 +35,14 @@ class FirebaseRepository @Inject constructor()
     {
         private val userMovieData = Firebase.database.getReference(DatabaseFields.USERS_MOVIE_DATA)
 
-        private fun getUserDataDbRef(id: String) = userMovieData.child(id)
+        private fun getUserAllMoviesDataDbRef(id: String) = userMovieData.child(id)
 
+        private fun getUserMovieDbRef(userId: String, movieId: String) =
+                getUserAllMoviesDataDbRef(userId).child(movieId)
+
+        private fun getUserMovieIsWatchedDbRef(userId: String, movieId: String) =
+                getUserAllMoviesDataDbRef(userId).child(movieId)
+                    .child(DatabaseFields.MOVIE_IS_WATCHED_FIELD)
     }
 
     // region logged user
@@ -45,7 +56,7 @@ class FirebaseRepository @Inject constructor()
      * probably this will newer throw nullPointerException in [com.myniprojects.towatch.ui.activities.MainActivity]
      * when [_loggedUser] becomes null, [com.myniprojects.towatch.ui.activities.MainActivity] should be closed
      */
-    val requireUser: FirebaseUser
+    private val requireUser: FirebaseUser
         get() = _loggedUser.value!!
 
     init
@@ -175,19 +186,19 @@ class FirebaseRepository @Inject constructor()
     // region user movie data
 
     @ExperimentalCoroutinesApi
-    fun addToWatch(movie: LocalMovie): Flow<EventMessageStatus> = channelFlow {
+    fun addMovie(movie: LocalMovie, isWatched: Boolean): Flow<EventMessageStatus> = channelFlow {
 
         send(EventMessageStatus.Loading)
 
-        val movieData = hashMapOf(
-            DatabaseFields.MOVIE_TITLE_FIELD to movie.title,
-        )
+        val movieData = movie.apply {
+            this.isWatched = isWatched
+        }.dbHashMap()
 
-        getUserDataDbRef(requireUser.uid).child(movie.id.toString()).setValue(movieData)
+        getUserAllMoviesDataDbRef(requireUser.uid).child(movie.id.toString()).setValue(movieData)
             .addOnSuccessListener {
                 Timber.d("Movie [$movieData] saved successfully")
                 launch {
-                    send(EventMessageStatus.Success(Event(Message(R.string.movie_added_towatch))))
+                    send(EventMessageStatus.Success(Event(Message(if (isWatched) R.string.movie_added_to_watched else R.string.movie_added_towatch))))
                     close()
                 }
             }
@@ -201,6 +212,60 @@ class FirebaseRepository @Inject constructor()
 
         awaitClose()
     }
+
+    private var isWatchedListener: Pair<Query, ValueEventListener>? = null
+
+    fun removeWatchedListener()
+    {
+        isWatchedListener?.let {
+            it.first.removeEventListener(it.second)
+        }
+        isWatchedListener = null
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getMovieIsWatched(movieId: String): Flow<BaseStatus<Boolean?>> = channelFlow {
+
+        removeWatchedListener()
+
+        send(BaseStatus.Loading)
+
+        val q = getUserMovieIsWatchedDbRef(requireUser.uid, movieId)
+        val l = object : ValueEventListener
+        {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                Timber.d("Movie with id [$movieId] data retrieved")
+
+                val isWatched = snapshot.getValue(Boolean::class.java)
+
+                launch {
+                    send(BaseStatus.Success(isWatched))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError)
+            {
+
+                Timber.d("Movie with id [$movieId] cancelled")
+                launch {
+                    send(BaseStatus.Failed(error.toException().makeEvent))
+                }
+            }
+        }
+
+        isWatchedListener = q to l
+
+        q.addValueEventListener(l)
+
+        awaitClose()
+    }
+
+    fun removeMovie(movieId: String)
+    {
+        getUserMovieDbRef(requireUser.uid, movieId).ref.removeValue()
+    }
+
 
     // endregion
 }

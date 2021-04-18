@@ -73,7 +73,6 @@ class SearchViewModel @Inject constructor(
 
     init
     {
-        search("inception")
         viewModelScope.launch {
             tmdbRepository.getTrending().collectLatest {
                 _tmdbResponseTrending.value = it

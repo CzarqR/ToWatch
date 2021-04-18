@@ -162,7 +162,7 @@
                 >
 
                 <Button
-                    android:id="@+id/butFollow"
+                    android:id="@+id/butAddToWatch"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -172,11 +172,10 @@
                     android:text="@string/towatch"
                     android:textAllCaps="false"
                     app:icon="@drawable/ic_outline_movie_24"
-                    android:onClick="@{() -> viewModel.addMovieToWatch(movie)}"
                     />
 
                 <Button
-                    android:id="@+id/butMessage"
+                    android:id="@+id/butAddToWatched"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

@@ -32,4 +32,7 @@
     <string name="vote_format">Votes: %d</string>
     <string name="votes_icon">Votes icon</string>
     <string name="movie_added_towatch">"Movie added to ToWatch "</string>
+    <string name="movie_added_to_watched">Movie added to watched</string>
+    <string name="unwatched">Unwatched</string>
+    <string name="remove_towatch">Remove ToWatch</string>
 </resources>

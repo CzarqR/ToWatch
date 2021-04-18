@@ -40,7 +40,8 @@ data class MovieTmdb(
                     popularity = popularity,
                     releaseDate = releaseDate,
                     voteAverage = voteAverage,
-                    voteCount = voteCount
+                    voteCount = voteCount,
+                    isWatched = null
                 )
             }
             else

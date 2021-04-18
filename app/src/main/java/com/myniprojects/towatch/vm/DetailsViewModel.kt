@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -25,18 +26,32 @@ class DetailsViewModel @Inject constructor(
     val addingState = _addingState.asStateFlow()
 
     @ExperimentalCoroutinesApi
-    fun addMovieToWatch(movie: LocalMovie)
+    fun addMovieToWatch(movie: LocalMovie, isWatched: Boolean)
     {
+        Timber.d("VM localMovie isWatched ${movie.isWatched}")
         /**
          * if [_addingState]is not Loading make new request
          */
         if (_addingState.value != EventMessageStatus.Loading)
         {
             viewModelScope.launch {
-                firebaseRepository.addToWatch(movie).collectLatest {
+                firebaseRepository.addMovie(movie, isWatched).collectLatest {
                     _addingState.value = it
                 }
             }
         }
     }
+
+    @ExperimentalCoroutinesApi
+    fun getMovieIsWatched(movieId: String) = firebaseRepository.getMovieIsWatched(movieId)
+
+    override fun onCleared()
+    {
+        super.onCleared()
+        Timber.d("ViewModel cleared")
+        firebaseRepository.removeWatchedListener()
+    }
+
+    fun removeMovie(movieId: String) = firebaseRepository.removeMovie(movieId)
+
 }

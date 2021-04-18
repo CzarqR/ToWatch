@@ -27,7 +27,7 @@
         android:layout_marginBottom="@dimen/medium_margin"
         app:cardCornerRadius="16dp"
         android:onClick="@{() -> movieClickListener.movieClick(movie)}"
-        android:background="?selectableItemBackground"
+        android:foreground="?selectableItemBackground"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
