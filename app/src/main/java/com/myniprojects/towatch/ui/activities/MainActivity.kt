@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_ToWatch)
         setContentView(binding.root)
 
         setupCollecting()

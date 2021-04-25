@@ -9,4 +9,6 @@
 
     <color name="nav_bar_color">#2d2d2d</color>
 
+    <color name="color_primary">@color/red_medium</color>
+
 </resources>

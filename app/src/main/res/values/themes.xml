@@ -28,4 +28,14 @@
     </style>
 
 
+    <style name="splashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <item name="android:windowBackground">@drawable/splash_image</item>
+        <item name="android:statusBarColor">@color/color_primary</item>
+        <!-- Navigation bar color -->
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:navigationBarColor">@color/color_primary</item>
+
+    </style>
+
 </resources>
